@@ -1,0 +1,31 @@
+{% extends "index.html"%} {% block title %} Update Courses {% endblock %} 
+
+{% block content %}
+<br/>
+    <form action="/test1/{{course_code_to_update.course_code}}"method="POST">
+        {% for message in get_flashed_messages() %}
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+               <strong>{{message}}</strong> 
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        {% endfor %}
+    <h3 align="Center">Update Courses</h3>
+    <br/>
+    <br/>
+    <div class="shadow p-3 mb-5 bg-body rounded">
+    {{form.new_course_name.label(class="form-label")}}
+    {{form.new_course_name(class="form-control", placeholder="Enter new course name", value=course_code_to_update.course_name)}}
+    <br/>
+    {{form.new_course_code.label(class="form-label")}}
+    {{form.new_course_code(class="form-control", placeholder="Enter new course code", value=course_code_to_update.course_code)}}
+    <br/>
+    {{form.new_resp_college.label(class="form-label")}} {{form.new_resp_college(class="custom-select")}}
+    <br/>
+    <br/>
+    {{form.submit(class="btn btn-primary")}}
+    </div>
+    </form>
+        {% endblock %}

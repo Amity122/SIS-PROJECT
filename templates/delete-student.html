@@ -1,0 +1,44 @@
+{% extends "index.html"%} {% block title %} Delete Students {% endblock %} {% block content
+  %}
+  <br/>
+  {% for message in get_flashed_messages()%}
+
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+         <strong>{{message}}</strong> 
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+  
+  {% endfor %}
+  <h3 align="CENTER">Delete Student</h3>
+  <form method="POST">
+    {{form.hidden_tag()}}
+    <div class="shadow p-3 mb-5 bg-body rounded">
+    {{form.IDNumber_del.label(class="form-label")}}
+    {{form.IDNumber_del(class="form-control", placeholder="Enter ID Number to delete")}}
+    <br/>
+    {{form.submit(class="btn btn-danger")}}
+  </div>
+    <br/><br/><br/>
+    <table class="table table-striped table-hover table-bordered ">
+        <thead>
+            <tr>
+                <th scope="col">ID Number</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Course</th>
+                <th scope="col">Year Level</th>
+                <th scope="col">Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for del_student in deleted_student %}
+        <tr><td>{{del_student.id}}</td>  <td>{{del_student.first_name}}</td> <td>{{del_student.last_name}}</td>
+          <td>{{del_student.course}}</td> <td>{{del_student.year_lvl}}</td> <td>{{del_student.gender}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+        {% endblock %}

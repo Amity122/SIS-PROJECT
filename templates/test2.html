@@ -1,0 +1,40 @@
+{% extends "index.html"%} {% block title %} Update Student Record {% endblock %} 
+
+
+{% block content %}
+<form action="/test2/{{student_record_to_update.id}}" method="POST">
+  <br/>
+{% for message in get_flashed_messages() %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+       <strong>{{message}}</strong> 
+       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+
+{% endfor %}
+<br/>
+<h3 align="CENTER">Update Student Record</h3>
+    {{form.hidden_tag()}}
+    <div class="shadow p-3 mb-5 bg-body rounded">
+    {{form.upd_IDNumber.label(class="form-label")}}
+    {{form.upd_IDNumber(class="form-control", placeholder="Enter student's new ID Number (YYYY-NNNN):", value=student_record_to_update.id)}}
+    {{form.upd_first_name.label(class="form-label")}}
+    {{form.upd_first_name(class="form-control", placeholder="Enter student's new first name", value=student_record_to_update.first_name)}}
+    {{form.upd_last_name.label(class="form-label")}}
+    {{form.upd_last_name(class="form-control", placeholder="Enter student's new last name", value=student_record_to_update.last_name)}}
+    {{form.upd_course.label(class="form-label")}} {{form.upd_course(class="custom-select")}}
+    <br/>
+    {{form.upd_year_level.label(class="form-label")}} {{form.upd_year_level(class="custom-select")}}
+    <br/>
+    {{form.upd_gender.label(class="form-label")}} 
+    {{form.upd_gender(class="custom-select")}}
+    <br/>
+    <br/>
+    {{form.submit(class="btn btn-primary")}}
+</form>
+</div>
+
+{% endblock %}

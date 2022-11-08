@@ -1,0 +1,46 @@
+{% extends "index.html"%} {% block title %} Add Courses {% endblock %} {% block content
+    %}
+<br/>
+{% for message in get_flashed_messages()%}
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+           <strong>{{message}}</strong> 
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+    
+    {% endfor %}
+ <h3 align="CENTER">Add Course Record</h3>
+<form method="POST">
+    {{form.hidden_tag()}}
+    <div class="shadow p-3 mb-5 bg-body rounded">
+    {{form.course_name.label(class="form-label")}}
+    {{form.course_name(class="form-control", placeholder="Enter course name")}}
+    <br/>
+    {{form.course_code.label(class="form-label")}}
+    {{form.course_code(class="form-control", placeholder="Enter course code")}}
+    <br/>
+    {{form.resp_college.label(class="form-label")}} {{form.resp_college(class="custom-select")}}
+    <br/>
+    <br/>
+    {{form.submit(class="btn btn-success")}}
+</div>
+    <br/><br/><br/>
+    <!-- <table class="table table-striped table-hover table-bordered ">
+        <thead>
+            <tr>
+                <th scope="col">Course Name</th>
+                <th scope="col">Course Code</th>
+                <th scope="col">Respective College</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for added_course in add_course %}
+        <tr><td>{{added_course.course_name}}</td>  <td>{{added_course.course_code}}</td> <td>{{added_course.resp_college}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table> -->
+        {% endblock %}

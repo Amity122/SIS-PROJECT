@@ -1,0 +1,40 @@
+{% extends "index.html"%} {% block title %} Delete Colleges {% endblock %} {% block content
+  %}
+  <br/>
+  {% for message in get_flashed_messages()%}
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+           <strong>{{message}}</strong> 
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+    
+    {% endfor %}
+  <h3 align="CENTER">Delete College</h3>
+  <div class="shadow p-3 mb-5 bg-body rounded">
+  <form method="POST">
+    {{form.hidden_tag()}}
+    {{form.college_code_del.label(class="form-label")}}
+    {{form.college_code_del(class="form-control", placeholder="Select college code to delete")}}
+    <br/>
+    {{form.submit(class="btn btn-danger")}}
+  </div>
+</form>
+<br/><br/><br/>
+    <table class="table table-striped table-hover table-bordered ">
+      <thead>
+          <tr>
+              <th scope="col">College Name</th>
+              <th scope="col">College Code</th>
+          </tr>
+      </thead>
+      <tbody>
+      {% for yes_college in del_college %}
+      <tr><td>{{yes_college.college_name}}</td>  <td>{{yes_college.college_code}}</td>
+      </tr>
+      {% endfor %}
+  </tbody>
+  </table>
+      {% endblock %}
