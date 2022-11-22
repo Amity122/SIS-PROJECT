@@ -12,16 +12,18 @@
       
   
   {% endfor %}
-  <h3 align="CENTER">Delete Student</h3>
+ 
   <form method="POST">
     {{form.hidden_tag()}}
     <div class="shadow p-3 mb-5 bg-body rounded">
+       <h3 align="CENTER">Delete Student</h3>
     {{form.IDNumber_del.label(class="form-label")}}
     {{form.IDNumber_del(class="form-control", placeholder="Enter ID Number to delete")}}
     <br/>
     {{form.submit(class="btn btn-danger")}}
   </div>
     <br/><br/><br/>
+    <div class="shadow p-3 mb-5 bg-body rounded">
     <table class="table table-striped table-hover table-bordered ">
         <thead>
             <tr>
@@ -41,4 +43,5 @@
         {% endfor %}
     </tbody>
     </table>
+  </div>
         {% endblock %}

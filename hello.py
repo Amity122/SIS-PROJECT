@@ -1,23 +1,35 @@
 from turtle import update
-from flask import Flask, render_template, flash, request, redirect, url_for
+from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, SelectMultipleField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Regexp, Length
+from wtforms.fields import FileField
 from flask_sqlalchemy import SQLAlchemy
 from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_migrate import Migrate
-from flask_mysqldb import MySQL, MySQLdb
-from sqlalchemy.exc import IntegrityError, PendingRollbackError
+from flask_mysqldb import MySQL
+from sqlalchemy.exc import IntegrityError
+import cloudinary
+import cloudinary.uploader
+from config import CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME, SQLALCHEMY_DATABASE_URI, SECRET_KEY
+from dotenv import load_dotenv
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:waifu122@localhost/SIS5'
-app.config['SECRET_KEY'] = "wah"
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'waifu122'
-app.config['MYSQL_DB'] = 'SIS5'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+load_dotenv('.env')
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
+
+app = Flask(__name__, template_folder='templates',
+            instance_relative_config=True)
+app.config.from_mapping(SECRET_KEY=SECRET_KEY,
+                        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI)
 mysql = MySQL(app)
+
+cloudinary.config(
+    CLOUDINARY_CLOUD_NAME=CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY=CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET
+)
+
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -68,6 +80,7 @@ class Student(db.Model):
     gender = db.Column(db.String(150))
     course = db.Column(db.String(150), db.ForeignKey(
         'courses.course_code', ondelete='SET NULL', onupdate='cascade'), nullable=True)
+    profile_pic = db.Column(db.String(5000), nullable=True)
 
 
 class add_student_form(FlaskForm):
@@ -81,6 +94,7 @@ class add_student_form(FlaskForm):
         ("1st Year", "1st Year"), ("2nd Year", "2nd Year"), ("3rd Year", "3rd Year"), ("4th Year", "4th Year")], validators=[DataRequired()])
     gender = SelectField('Gender:', choices=[
                         ('M', 'M'), ('F', 'F'), ('Other', 'Other')], validators=[DataRequired()])
+    profile_pic = FileField("Student's Profile Picture: ")
     submit = SubmitField("Add Student")
 
 
@@ -101,6 +115,7 @@ class update_student_form(FlaskForm):
         ("1st Year", "1st Year"), ("2nd Year", "2nd Year"), ("3rd Year", "3rd Year"), ("4th Year", "4th Year")], validators=[DataRequired()])
     upd_gender = SelectField('Gender:', choices=[
         ('M', 'M'), ('F', 'F'), ('Other', 'Other')], validators=[DataRequired()])
+    profile_pic = FileField("Student's Profile Picture: ")
     submit = SubmitField("Update Student")
 
 
@@ -194,6 +209,7 @@ def test(college_code):
 def test2(id):
     updated_student = Student.query.order_by(Student.last_name)
     form = update_student_form()
+    profile_pic = form.profile_pic.data
     student_record_to_update = Student.query.get_or_404(id)
     if form.validate_on_submit():
         student_record_to_update.id = request.form['upd_IDNumber']
@@ -203,9 +219,17 @@ def test2(id):
         student_record_to_update.year_lvl = request.form['upd_year_level']
         student_record_to_update.gender = request.form['upd_gender']
         try:
-            db.session.commit()
-            flash("Student Info Updated Successfully!")
-            return render_template("test2.html", updated_student=updated_student, form=form, student_record_to_update=student_record_to_update)
+            if profile_pic and profile_pic.filename.split(".")[-1].lower() in ALLOWED_EXTENSIONS:
+                upload_result = cloudinary.uploader.upload(
+                    profile_pic, folder="SIS")
+                student_record_to_update.profile_pic = upload_result['secure_url']
+                db.session.commit()
+                flash("Student Info Updated Successfully!")
+                return render_template("test2.html", updated_student=updated_student, form=form, student_record_to_update=student_record_to_update)
+            else:
+                db.session.commit()
+                flash("Student Info Updated Successfully!")
+                return render_template("test2.html", updated_student=updated_student, form=form, student_record_to_update=student_record_to_update)
         except IntegrityError:
             db.session.rollback()
             flash("Student Info Update Failed!")
@@ -233,15 +257,25 @@ def add_student():
     gender = None
     form = add_student_form()
     add_student = Student.query.order_by(Student.last_name)
+    profile_pic = form.profile_pic.data
     if form.validate_on_submit():
         some_variable = Student.query.filter_by(
             id=form.IDNumber.data).first()
         try:
-            some_variable = Student(id=form.IDNumber.data, first_name=form.first_name.data,
-                                    last_name=form.last_name.data, course=form.course.data, year_lvl=form.year_level.data, gender=form.gender.data)
-            db.session.add(some_variable)
-            db.session.commit()
-            flash("Data Added Successfully!")
+            if profile_pic and profile_pic.filename.split(".")[-1].lower() in ALLOWED_EXTENSIONS:
+                upload_result = cloudinary.uploader.upload(
+                    profile_pic, folder="SIS")
+                some_variable = Student(id=form.IDNumber.data, first_name=form.first_name.data,
+                                        last_name=form.last_name.data, course=form.course.data, year_lvl=form.year_level.data, gender=form.gender.data, profile_pic=upload_result['secure_url'])
+                db.session.add(some_variable)
+                db.session.commit()
+                flash("Data Added Successfully!")
+            else:
+                some_variable = Student(id=form.IDNumber.data, first_name=form.first_name.data,
+                                        last_name=form.last_name.data, course=form.course.data, year_lvl=form.year_level.data, gender=form.gender.data)
+                db.session.add(some_variable)
+                db.session.commit()
+                flash("Data Added Successfully!")
         except IntegrityError:
             db.session.rollback()
             flash("Student already exists!")

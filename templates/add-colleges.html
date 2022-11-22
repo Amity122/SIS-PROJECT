@@ -14,8 +14,9 @@
     
     {% endfor %}
 <br/>
- <h3 align="CENTER">Add College</h3>
+
  <div class="shadow p-3 mb-5 bg-body rounded">
+    <h3 align="CENTER">Add College</h3>
  <form method="POST">
     {{form.hidden_tag()}}
     {{form.college_name.label(class="form-label")}}
@@ -27,7 +28,8 @@
     {{form.submit(class="btn btn-success")}}
  </div>
  </form>
-    <!-- <br/><br/><br/>
+    <br/><br/><br/>
+<div class="shadow p-3 mb-5 bg-body rounded">
 <table class="table table-striped table-hover table-bordered ">
     <thead>
         <tr>
@@ -41,5 +43,6 @@
     </tr>
     {% endfor %}
 </tbody>
-</table> -->
+</table>
+</div>
     {% endblock %}

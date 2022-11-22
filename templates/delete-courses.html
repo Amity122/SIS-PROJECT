@@ -12,8 +12,9 @@
         
     
     {% endfor %}
-  <h3 align="CENTER">Delete Course</h3>
+  
   <div class="shadow p-3 mb-5 bg-body rounded">
+    <h3 align="CENTER">Delete Course</h3>
   <form method="POST">
     {{form.hidden_tag()}}
 
@@ -24,6 +25,7 @@
   </div>
 </form>
 <br/><br/><br/>
+<div class="shadow p-3 mb-5 bg-body rounded">
     <table class="table table-striped table-hover table-bordered ">
       <thead>
           <tr>
@@ -38,4 +40,5 @@
       {% endfor %}
   </tbody>
   </table>
+</div>
       {% endblock %}

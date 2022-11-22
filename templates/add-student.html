@@ -14,7 +14,7 @@
 {% endfor %}
 <br/>
  <h3 align="CENTER">Add Student Record</h3>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {{form.hidden_tag()}}
     <div class="shadow p-3 mb-5 bg-body rounded">
     {{form.IDNumber.label(class="form-label")}}
@@ -29,6 +29,11 @@
     <br/>
     {{form.gender.label(class="form-label")}} 
     {{form.gender(class="custom-select")}}
+    <br/>
+    <br/>
+    {{form.profile_pic.label(class="form-label")}}
+    <br/>
+    {{form.profile_pic(class="form-control")}}
     <br/>
     <br/>
     {{form.submit(class="btn btn-success")}}

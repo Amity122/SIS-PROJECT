@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<form action="/test2/{{student_record_to_update.id}}" method="POST">
+<form action="/test2/{{student_record_to_update.id}}" method="POST" enctype="multipart/form-data">
   <br/>
 {% for message in get_flashed_messages() %}
 
@@ -16,9 +16,10 @@
 
 {% endfor %}
 <br/>
-<h3 align="CENTER">Update Student Record</h3>
+
     {{form.hidden_tag()}}
     <div class="shadow p-3 mb-5 bg-body rounded">
+      <h3 align="CENTER">Update Student Record</h3>
     {{form.upd_IDNumber.label(class="form-label")}}
     {{form.upd_IDNumber(class="form-control", placeholder="Enter student's new ID Number (YYYY-NNNN):", value=student_record_to_update.id)}}
     {{form.upd_first_name.label(class="form-label")}}
@@ -32,9 +33,23 @@
     {{form.upd_gender.label(class="form-label")}} 
     {{form.upd_gender(class="custom-select")}}
     <br/>
+    {{form.profile_pic.label(class="form-label")}}
+    <br/>
+    {{form.profile_pic(class="form-control")}}
+    <br/>
     <br/>
     {{form.submit(class="btn btn-primary")}}
 </form>
 </div>
-
+<style>
+  body {
+    background-image: url('../static/images/bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+  }
+.shadow {
+    background-color: white;
+}
+</style>
 {% endblock %}

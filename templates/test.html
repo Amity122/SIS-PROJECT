@@ -12,10 +12,12 @@
               </button>
             </div>
         {% endfor %}
+        
+    <div class="shadow p-3 mb-5 bg-body rounded">
     <h3 align="Center">Update Colleges</h3>
     <br/>
     <br/>
-    <div class="shadow p-3 mb-5 bg-body rounded">
+    
     {{form.new_college_name.label(class="form-label")}}
     {{form.new_college_name(class="form-control", placeholder="Enter new college name", value=college_name_to_update.college_name)}}
     <br/>
@@ -25,4 +27,15 @@
     {{form.submit(class="btn btn-primary")}}
     </div>
     </form>
+    <style>
+        body {
+            background-image: url('../static/images/bg.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+          }
+        .shadow {
+            background-color: white;
+        }
+    </style>
         {% endblock %}
